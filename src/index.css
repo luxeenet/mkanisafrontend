@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --color-church-50: #f0f4f8;
+  --color-church-100: #d9e2ec;
+  --color-church-200: #bcccdc;
+  --color-church-300: #9fb3c8;
+  --color-church-400: #829ab1;
+  --color-church-500: #627d98;
+  --color-church-600: #486581;
+  --color-church-700: #334e68;
+  --color-church-800: #243b53;
+  --color-church-900: #102a43;
+  --color-church-accent: #c7a94d;
+
+  --font-sans: "Inter", "system-ui", "sans-serif";
+}
+
+:root {
+  --church-blue: #102a43;
+  --church-accent: #c7a94d;
+}
+
+body {
+  background-color: white;
+  color: #1a202c;
+  font-family: var(--font-sans);
+}
+
+.bg-mesh {
+  background-image:
+    radial-gradient(at 0% 0%, hsla(210, 100%, 93%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(210, 100%, 95%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(210, 100%, 93%, 1) 0, transparent 50%);
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
