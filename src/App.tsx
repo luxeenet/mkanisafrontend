@@ -8,6 +8,7 @@ import MembersPage from './pages/portal/Members'
 import FinancePage from './pages/portal/Finance'
 import SmsPage from './pages/portal/Sms'
 import SuperAdminDashboard from './pages/admin/SuperAdminDashboard'
+import AdminSetup from './pages/admin/AdminSetup'
 import TenantManagement from './pages/admin/TenantManagement'
 import MemberDashboard from './pages/member/MemberDashboard'
 import MemberProfile from './pages/member/MemberProfile'
@@ -73,6 +74,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/setup-admin" element={<AdminSetup />} />
 
       {/* Super Admin Routes */}
       <Route path="/admin" element={<ProtectedRoute requireAdmin><SuperAdminDashboard /></ProtectedRoute>} />
