@@ -137,14 +137,25 @@ export default function TenantManagement() {
                                             <td className="px-10 py-7">
                                                 <div className="flex items-center gap-2 group/link">
                                                     <Globe size={14} className="text-slate-300 group-hover/link:text-indigo-500 transition-colors" />
-                                                    <a
-                                                        href={`https://${tenant.domain || tenant.slug + '.mkanisa.pe.hu'}`}
-                                                        target="_blank"
-                                                        rel="noreferrer"
-                                                        className="text-sm font-bold text-slate-500 hover:text-indigo-600 hover:underline decoration-2 underline-offset-4 decoration-indigo-200"
-                                                    >
-                                                        {tenant.domain || `${tenant.slug}.mkanisa.pe.hu`}
-                                                    </a>
+                                                    {(() => {
+                                                        const baseDomain = import.meta.env.VITE_BASE_DOMAIN || 'mkanisa.pamtok.com';
+
+                                                        const protocol = window.location.protocol;
+                                                        const displayUrl = tenant.domain || `${tenant.slug}.${baseDomain}`;
+                                                        const fullUrl = tenant.domain ? `https://${tenant.domain}` : `${protocol}//${tenant.slug}.${baseDomain}`;
+                                                        return (
+                                                            <a
+                                                                href={fullUrl}
+                                                                target="_blank"
+                                                                rel="noreferrer"
+                                                                className="text-sm font-bold text-slate-500 hover:text-indigo-600 hover:underline decoration-2 underline-offset-4 decoration-indigo-200"
+                                                            >
+                                                                {displayUrl}
+                                                            </a>
+                                                        );
+                                                    })()}
+
+
                                                     <ExternalLink size={12} className="text-slate-300 opacity-0 group-hover/link:opacity-100 transition-all" />
                                                 </div>
                                             </td>

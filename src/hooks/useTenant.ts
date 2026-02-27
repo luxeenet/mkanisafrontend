@@ -16,25 +16,22 @@ export function useTenant() {
     useEffect(() => {
         const resolve = async () => {
             const hostname = window.location.hostname;
-            const parts = hostname.split('.');
+            const baseDomain = import.meta.env.VITE_BASE_DOMAIN || 'mkanisa.pamtok.com';
 
-            // Subdomain logic:
-            // Local: [slug].localhost:5173 -> parts: [[slug], 'localhost']
-            // Prod: [slug].mkanisa.pamtok.com -> parts: [[slug], 'mkanisa', 'pamtok', 'com']
+            // Clean baseDomain from port if present for hostname comparison
+            const baseHostname = baseDomain.split(':')[0];
 
             let slug = '';
 
-            if (hostname.includes('localhost')) {
-                if (parts.length > 1 && parts[0] !== 'localhost') {
-                    slug = parts[0];
-                }
-            } else if (hostname.includes('pamtok.com')) {
-                // If the hostname is mkanisa.pamtok.com, parts.length is 3.
-                // If it's church.mkanisa.pamtok.com, parts.length is 4.
-                if (parts.length >= 4) {
-                    slug = parts[0];
-                }
+            // Handle production custom domain or local development subdomains
+            if (hostname !== baseHostname && hostname.endsWith(baseHostname)) {
+                slug = hostname.replace(`.${baseHostname}`, '');
             }
+            // Fallback for Vercel default domains (e.g., mkanisafrontend.vercel.app)
+            else if (hostname.includes('vercel.app') && hostname !== 'mkanisafrontend.vercel.app') {
+                slug = hostname.split('.')[0];
+            }
+
 
             if (slug) {
                 setIsSubdomain(true);
@@ -50,6 +47,7 @@ export function useTenant() {
                 setIsSubdomain(false);
                 setTenant(null);
             }
+
             setLoading(false);
         };
 

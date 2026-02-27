@@ -56,14 +56,11 @@ export default function Onboarding() {
 
     if (success) {
         const tenantSlug = localStorage.getItem('tenantSlug')
-        const hostname = window.location.hostname
+        const baseDomain = import.meta.env.VITE_BASE_DOMAIN || 'mkanisa.pamtok.com';
+        const protocol = window.location.protocol;
 
-        // Using common dev subdomain fallback for localhost
-        let portalUrl = `http://${tenantSlug}.localhost:5173`
+        let portalUrl = `${protocol}//${tenantSlug}.${baseDomain}`;
 
-        if (!hostname.includes('localhost')) {
-            portalUrl = `https://${tenantSlug}.mkanisa.pamtok.com`
-        }
 
         return (
             <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-church-900">
@@ -96,8 +93,10 @@ export default function Onboarding() {
                         Access Your Portal
                     </button>
                     <p className="mt-6 text-xs text-slate-400">
-                        Redirecting to <strong>{tenantSlug}.localhost</strong> automatically...
+                        Redirecting to <strong>{tenantSlug}.{import.meta.env.VITE_BASE_DOMAIN || 'mkanisa.pamtok.com'}</strong> automatically...
                     </p>
+
+
                 </div>
             </div>
         )

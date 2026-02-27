@@ -166,10 +166,11 @@ export default function Login() {
                                 )}
 
                                 {churches.length > 0 ? churches.map((church) => {
-                                    const hostname = window.location.hostname;
-                                    const portalUrl = hostname.includes('localhost')
-                                        ? `http://${church.slug}.localhost:5173`
-                                        : `https://${church.slug}.mkanisa.pamtok.com`;
+                                    const baseDomain = import.meta.env.VITE_BASE_DOMAIN || 'mkanisa.pamtok.com';
+
+                                    const protocol = window.location.protocol;
+                                    const portalUrl = `${protocol}//${church.slug}.${baseDomain}`;
+
 
                                     return (
                                         <button
