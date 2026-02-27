@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Shield, CheckCircle2, AlertCircle, Loader2, ArrowRight, Lock } from 'lucide-react';
 import { onboardingService } from '../../services/onboarding.service';
 import { Link } from 'react-router-dom';
