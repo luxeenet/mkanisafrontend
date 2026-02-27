@@ -17,13 +17,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const initAuth = async () => {
             const token = localStorage.getItem('accessToken');
-            if (token) {
+            const tenantId = localStorage.getItem('tenantId');
+
+            if (token && tenantId) {
                 try {
                     const res = await authService.getCurrentUser();
                     setUser(res.data);
                 } catch (err) {
-                    console.error('Session expired or invalid');
-                    localStorage.removeItem('accessToken');
+                    console.error('Session expired or invalid. Logging out.');
+                    authService.logout();
                 }
             }
             setLoading(false);
@@ -31,10 +33,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         initAuth();
     }, []);
 
+
     const login = async (credentials: any) => {
         const data = await authService.login(credentials);
         setUser(data.user);
+        if (data.user.is_super_admin) {
+            localStorage.setItem('isSuperAdmin', 'true');
+        }
     };
+
 
     const logout = () => {
         authService.logout();

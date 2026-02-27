@@ -33,7 +33,7 @@ export function useTenant() {
             }
 
 
-            if (slug) {
+            if (slug && slug !== hostname) {
                 setIsSubdomain(true);
                 try {
                     const response = await onboardingService.resolveTenant(slug);
@@ -44,8 +44,16 @@ export function useTenant() {
                     setTenant(null);
                 }
             } else {
+                // If no subdomain, try to resolve the "system" tenant for Super Admin logins
                 setIsSubdomain(false);
-                setTenant(null);
+                try {
+                    const response = await onboardingService.resolveTenant('system');
+                    setTenant(response.data);
+                    localStorage.setItem('tenantId', response.data.id);
+                } catch (err) {
+                    console.error('Failed to resolve system tenant:', err);
+                    setTenant(null);
+                }
             }
 
             setLoading(false);

@@ -54,25 +54,34 @@ export default function Login() {
         e.preventDefault()
         setLoading(true)
         try {
+            // Ensure tenantId is set for Super Admin logins on main domain
+            if (!localStorage.getItem('tenantId') && identifier.includes('admin@mkanisa.com')) {
+                const res = await onboardingService.resolveTenant('system');
+                localStorage.setItem('tenantId', res.data.id);
+            }
+
             await login({
                 phoneNumber: identifier,
-                email: identifier, // Send both for compatibility
+                email: identifier,
                 password,
                 role
             })
-            if (identifier.includes('superadmin')) {
+
+            if (identifier.includes('admin@mkanisa.com')) {
                 navigate('/admin')
             } else if (role === 'admin') {
                 navigate('/')
             } else {
                 navigate('/member')
             }
-        } catch (err) {
-            alert('Login failed. Please check your credentials.')
+        } catch (err: any) {
+            console.error('Login error:', err);
+            alert(err.response?.data?.message || 'Login failed. Please check your credentials.');
         } finally {
             setLoading(false)
         }
     }
+
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden font-sans">
@@ -186,8 +195,9 @@ export default function Login() {
                                                     <p className="font-black text-slate-800 text-lg group-hover:text-slate-900">{church.name}</p>
                                                     <div className="flex items-center gap-1.5 text-slate-400">
                                                         <Globe size={12} />
-                                                        <span className="text-[10px] font-black uppercase tracking-widest">{church.slug}.mkanisa.pe.hu</span>
+                                                        <span className="text-[10px] font-black uppercase tracking-widest">{church.slug}.{baseDomain}</span>
                                                     </div>
+
                                                 </div>
                                             </div>
                                             <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center shadow-inner group-hover:bg-slate-900 group-hover:text-white transition-all">
