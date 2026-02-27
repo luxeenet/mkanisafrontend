@@ -32,7 +32,6 @@ export function useTenant() {
                 slug = hostname.split('.')[0];
             }
 
-
             if (slug && slug !== hostname) {
                 setIsSubdomain(true);
                 try {
@@ -50,8 +49,11 @@ export function useTenant() {
                     const response = await onboardingService.resolveTenant('system');
                     setTenant(response.data);
                     localStorage.setItem('tenantId', response.data.id);
-                } catch (err) {
-                    console.error('Failed to resolve system tenant:', err);
+                } catch (err: any) {
+                    // It's fine if "system" doesn't exist yet (before setup-admin)
+                    if (err.response?.status !== 404) {
+                        console.error('Failed to resolve system tenant:', err);
+                    }
                     setTenant(null);
                 }
             }

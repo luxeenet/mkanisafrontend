@@ -54,10 +54,22 @@ export default function Login() {
         e.preventDefault()
         setLoading(true)
         try {
-            // Ensure tenantId is set for Super Admin logins on main domain
-            if (!localStorage.getItem('tenantId') && identifier.includes('admin@mkanisa.com')) {
-                const res = await onboardingService.resolveTenant('system');
-                localStorage.setItem('tenantId', res.data.id);
+            let currentTenantId = localStorage.getItem('tenantId');
+
+            // If No tenantId (main domain) and trying to login as Super Admin
+            if (!currentTenantId && identifier.includes('admin@mkanisa.com')) {
+                try {
+                    const res = await onboardingService.resolveTenant('system');
+                    currentTenantId = res.data.id;
+                    localStorage.setItem('tenantId', currentTenantId as string);
+                } catch (err) {
+                    console.error('System tenant not found.');
+                    throw new Error('System not initialized. Please visit /setup-admin first.');
+                }
+            }
+
+            if (!currentTenantId) {
+                throw new Error('Tenant context missing. If you are a church admin, please use your church-specific link.');
             }
 
             await login({
@@ -76,11 +88,13 @@ export default function Login() {
             }
         } catch (err: any) {
             console.error('Login error:', err);
-            alert(err.response?.data?.message || 'Login failed. Please check your credentials.');
+            const message = err.response?.data?.message || err.message || 'Login failed. Please check your credentials.';
+            alert(message);
         } finally {
             setLoading(false)
         }
     }
+
 
 
     return (
