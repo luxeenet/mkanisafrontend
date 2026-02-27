@@ -45,7 +45,7 @@ function App() {
           <h1 className="text-4xl font-black text-church-900 mb-4">Church Not Found</h1>
           <p className="text-slate-600 mb-8">The portal you are looking for doesn't exist or has been moved.</p>
           <button
-            onClick={() => window.location.href = 'http://localhost:5173'}
+            onClick={() => window.location.href = window.location.origin}
             className="bg-church-900 text-white px-8 py-4 rounded-xl font-bold"
           >
             Back to M-KANISA
