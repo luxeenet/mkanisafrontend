@@ -9,6 +9,7 @@ export const portalService = {
         delete: (id: string) => api.delete(`/church/members/${id}`),
     },
     sms: {
-        broadcast: (data: { message: string, recipients: string[] }) => api.post('/sms/broadcast', data)
+        broadcast: (data: { message: string, recipients: string[] }) => api.post('/sms/broadcast', data),
+        getBalance: () => api.get('/sms/balance')
     }
 };

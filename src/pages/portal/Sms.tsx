@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     MessageSquare,
     Send,
@@ -24,6 +24,20 @@ export default function SmsPage({ tenantName }: { tenantName: string }) {
     const [success, setSuccess] = useState(false);
     const [recipientsType, setRecipientsType] = useState<'all' | 'custom'>('all');
     const [customRecipients, setCustomRecipients] = useState('');
+    const [balance, setBalance] = useState<string>('0');
+
+    useEffect(() => {
+        fetchBalance();
+    }, []);
+
+    const fetchBalance = async () => {
+        try {
+            const res = await portalService.sms.getBalance();
+            setBalance(res.data.BalanceAmount || '0');
+        } catch (err) {
+            console.error('Failed to fetch SMS balance');
+        }
+    };
 
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -179,7 +193,7 @@ export default function SmsPage({ tenantName }: { tenantName: string }) {
                                         </div>
                                         <h4 className="font-black text-church-400 uppercase text-[10px] tracking-[0.2em]">Live Credit Vault</h4>
                                     </div>
-                                    <p className="text-6xl font-black tracking-tighter mb-2 italic">8,452</p>
+                                    <p className="text-6xl font-black tracking-tighter mb-2 italic">{parseFloat(balance).toLocaleString()}</p>
                                     <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-10">Active SMS Balance</p>
 
                                     <div className="space-y-3">
