@@ -26,9 +26,13 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
+            const currentPath = window.location.pathname;
+            // Avoid infinite redirect loop and don't clear tenantId
             localStorage.removeItem('accessToken');
-            localStorage.removeItem('tenantId');
-            window.location.href = '/login';
+
+            if (currentPath !== '/login' && !currentPath.includes('/auth/login')) {
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }
